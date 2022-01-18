@@ -1,3 +1,5 @@
+// ignore_for_file: void_checks
+
 import 'package:flutter/material.dart';
 import 'package:refeicoes/components/main_drawer.dart';
 import 'package:refeicoes/models/settings.dart';
