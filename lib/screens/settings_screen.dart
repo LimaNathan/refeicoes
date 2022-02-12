@@ -1,12 +1,14 @@
-// ignore_for_file: void_checks
+// ignore_for_file: void_checks, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import 'package:refeicoes/components/main_drawer.dart';
 import 'package:refeicoes/models/settings.dart';
 
 class SettingsScreen extends StatefulWidget {
+  final Settings settings;
   final Function(Settings) onSettingsChanged;
-  const SettingsScreen({Key? key, required this.onSettingsChanged})
+  const SettingsScreen(
+      {Key? key, required this.onSettingsChanged, required this.settings})
       : super(key: key);
 
   @override
@@ -14,7 +16,13 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  var settings = Settings();
+  var settings;
+
+  @override
+  void initState() {
+    super.initState();
+    settings = widget.settings;
+  }
 
   _createSwitch(
     String label,

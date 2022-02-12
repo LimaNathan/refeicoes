@@ -18,9 +18,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Settings settings = Settings();
+
   List<Meal> _avaibleMeals = dummyMeals;
+  final List<Meal> _favoriteMeals = [];
+
   void _filterMeals(Settings settings) {
     setState(() {
+      this.settings = settings;
       _avaibleMeals = dummyMeals.where((meal) {
         final filterGluten = settings.isGlutenFree && meal.isGlutenFree;
         final filterLactose = settings.isLactoseFree && meal.isLactoseFree;
@@ -35,11 +40,23 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _toggleFavorite(Meal meal) {
+    setState(() {
+      _favoriteMeals.contains(meal)
+          ? _favoriteMeals.remove(meal)
+          : _favoriteMeals.add(meal);
+    });
+  }
+
+  bool _isFavorite(Meal meal) {
+    return _favoriteMeals.contains(meal);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'DeliMeals',
+      title: 'Vamos Cozinhar?',
       theme: ThemeData(
         primaryColor: Colors.red,
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
@@ -52,12 +69,13 @@ class _MyAppState extends State<MyApp> {
             ),
       ),
       routes: {
-        AppRoutes.home: (ctx) => const TabsScreen(),
+        AppRoutes.home: (ctx) => TabsScreen(favoriteMeals: _favoriteMeals),
         AppRoutes.categoriesMeals: (ctx) =>
             CategoriesMealsScreen(_avaibleMeals),
-        AppRoutes.mealDetail: (ctx) => const MealDetailScreen(),
+        AppRoutes.mealDetail: (ctx) =>
+            MealDetailScreen(onToggleFavorite: _toggleFavorite, isFavorite: _isFavorite,),
         AppRoutes.settings: (ctx) =>
-            SettingsScreen(onSettingsChanged: _filterMeals),
+            SettingsScreen(onSettingsChanged: _filterMeals, settings: settings),
       },
     );
   }
